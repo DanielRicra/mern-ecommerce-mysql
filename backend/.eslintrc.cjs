@@ -1,7 +1,8 @@
 module.exports = {
    'env': {
       'es2021': true,
-      'node': true
+      'node': true,
+      'jest': true
    },
    'extends': 'eslint:recommended',
    'parserOptions': {
@@ -21,6 +22,10 @@ module.exports = {
       'semi': [
          'error',
          'always'
+      ],
+      'no-unused-vars': [
+         'error', 
+         { 'vars': 'local', 'args': 'none', 'ignoreRestSiblings': false }
       ]
    }
 };
