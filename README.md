@@ -8,3 +8,12 @@
 cd backend
 npm run dev
 ```
+
+## Frontend
+
+### Start the frontend
+
+```shell
+cd frontend
+npm run dev
+```
