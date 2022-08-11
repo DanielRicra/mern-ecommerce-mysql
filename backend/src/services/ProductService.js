@@ -28,9 +28,9 @@ export const countProductsByCategory = async (categoryId) => {
 
 export const saveProduct = async (product) => {
    return await pool.query(
-      'INSERT INTO products (name, description, category_id, bar_code, sale_price, stock) ' +
-      'VALUES(?, ?, ?, ?, ?, ?)', 
-      [product.name, product.description, product.categoryId, product.barCode, product.salePrice, product.stock]
+      'INSERT INTO products (name, description, category_id, bar_code, sale_price, stock, img_url) ' +
+      'VALUES(?, ?, ?, ?, ?, ?, ?)', 
+      [product.name, product.description, product.categoryId, product.barCode, product.salePrice, product.stock, product.imgUrl]
    );
 };
 
