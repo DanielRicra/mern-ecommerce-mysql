@@ -7,8 +7,8 @@ export const findUserByEmail = async (email) => {
 export const saveUser = async (user) => {
    return await pool
       .query(
-         'INSERT INTO users (first_name, last_name, cellphone, address, email, password) ' +
-         ' VALUES (?, ?, ?, ?, ?, ?)', 
-         [user.firstName, user.lastName, user.cellphone, user.address, user.email, user.password]
+         'INSERT INTO users (first_name, last_name, cellphone, address, email, password, is_admin) ' +
+         ' VALUES (?, ?, ?, ?, ?, ?, ?)', 
+         [user.firstName, user.lastName, user.cellphone, user.address, user.email, user.password, user.isAdmin]
       );
 };
