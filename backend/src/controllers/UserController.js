@@ -22,12 +22,21 @@ export const signin = async (req, res) => {
       }
 
       const token = jwt.sign(
-         { email: existingUser.email, id: existingUser.user_id },
+         { email: existingUser.email, userId: existingUser.user_id },
          process.env.EXPRESS_SECRET_KEY,
          { expiresIn: '1 days' }
       );
       delete existingUser.password;
-      res.status(200).json({ result: existingUser, token });
+      res.status(200).json({ 
+         result: {
+            userId: existingUser.user_id,
+            firstName: existingUser.first_name,
+            lastName: existingUser.last_name,
+            email: existingUser.email,
+            isAdmin: existingUser.is_admin
+         },
+         token 
+      });
 
    } catch (error) {
       res.status(500).json({ message: 'Something went wrong: ' + error.message });
@@ -39,6 +48,10 @@ export const signup = async (req, res) => {
 
    if (!isValidUser(newUser)) {
       return res.status(400).json({ message: 'Invalid data' });
+   }
+
+   if (!newUser.isAdmin) {
+      newUser.isAdmin = 0;
    }
 
    try {
@@ -59,7 +72,7 @@ export const signup = async (req, res) => {
       );
       
       delete newUser.password;
-      return res.status(201).json({result: { ...newUser, id: saveResult.insertId }, token });
+      return res.status(201).json({result: { ...newUser, userId: saveResult.insertId }, token });
 
    } catch (error) {
       return res.status(500).json({ message: 'Something went wrong: ' + error.message });
