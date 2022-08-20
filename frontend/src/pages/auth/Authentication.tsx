@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
@@ -12,7 +12,15 @@ import {
   Anchor,
   Stack,
   Center,
+  Notification,
 } from '@mantine/core';
+import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { IconX } from '@tabler/icons';
+
+import { signin } from '../../services/services';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import { SignInOrUpResponse } from '../../types/types';
 
 enum AuthForm {
   LOGIN = 'Log in',
@@ -21,6 +29,11 @@ enum AuthForm {
 
 function Authentication(props: PaperProps) {
   const [type, toggle] = useToggle([AuthForm.LOGIN, AuthForm.SIGNUP]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useLocalStorage<SignInOrUpResponse>('user');
+  const navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -35,9 +48,30 @@ function Authentication(props: PaperProps) {
     },
   });
 
-  const handleSubmit = () => {
-    // TODO: Use services to make the signin d signup
+  const handleSubmit = async () => {
+    setLoading(true);
+    if (type === AuthForm.LOGIN) {
+      await signin(form.values)
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error: AxiosError) => {
+          const err = error.response?.data;
+          if (err !== undefined) {
+            setErrorMessage(JSON.stringify(err).slice(12, -2));
+          } else {
+            setErrorMessage('Something went wrong try again later');
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
+
+  if (user !== undefined) {
+    navigate('/');
+  }
 
   return (
     <Center style={{ minHeight: '90vh' }}>
@@ -82,6 +116,12 @@ function Authentication(props: PaperProps) {
               onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
               error={form.errors.password && 'Password should include at least 6 characters'}
             />
+
+            {errorMessage !== '' && (
+              <Notification color="red" icon={<IconX size={18} />} onClose={() => setErrorMessage('')}>
+                {errorMessage}
+              </Notification>
+            )}
           </Stack>
 
           <Group position="apart" mt="xl">
@@ -96,7 +136,7 @@ function Authentication(props: PaperProps) {
                 ? 'Already have an account? Log In'
                 : "Don't have an account? Sign Up"}
             </Anchor>
-            <Button type="submit">{upperFirst(type)}</Button>
+            <Button type="submit" loading={loading}>{upperFirst(type)}</Button>
           </Group>
         </form>
       </Paper>
