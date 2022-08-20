@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
@@ -18,9 +18,9 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IconX } from '@tabler/icons';
 
-import { signin } from '../../services/services';
+import { signin, signup } from '../../services/services';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { SignInOrUpResponse } from '../../types/types';
+import { AuthResponse } from '../../types/types';
 
 enum AuthForm {
   LOGIN = 'Log in',
@@ -31,7 +31,7 @@ function Authentication(props: PaperProps) {
   const [type, toggle] = useToggle([AuthForm.LOGIN, AuthForm.SIGNUP]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useLocalStorage<SignInOrUpResponse>('user');
+  const [user, setUser] = useLocalStorage<AuthResponse>('user');
   const navigate = useNavigate();
 
   const form = useForm({
@@ -66,12 +66,30 @@ function Authentication(props: PaperProps) {
         .finally(() => {
           setLoading(false);
         });
+    } else {
+      await signup(form.values)
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error: AxiosError) => {
+          const err = error.response?.data;
+          if (err !== undefined) {
+            setErrorMessage(JSON.stringify(err).slice(12, -2));
+          } else {
+            setErrorMessage('Something went wrong try again later');
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
-  if (user !== undefined) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (user !== undefined) {
+      navigate('/');
+    }
+  }, [user]);
 
   return (
     <Center style={{ minHeight: '90vh' }}>
