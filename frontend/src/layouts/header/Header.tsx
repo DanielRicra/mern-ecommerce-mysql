@@ -5,31 +5,21 @@ import {
 } from '@mantine/core';
 import {
   IconSearch, IconShoppingCart, IconTruckDelivery,
-  IconChevronDown, IconSettings, IconSwitchHorizontal, IconLogout,
+  IconChevronDown, IconSettings, IconSwitchHorizontal, IconLogout, IconUserCircle,
 } from '@tabler/icons';
 import { NavLink } from 'react-router-dom';
 
 import ToggleThemetButton from '../../components/ToggleThemeButton';
 import useHeaderStyles from './styles';
 import brandLogo from '../../assets/brand-logo.png';
+import { useUserSelector, useUserDispatch } from '../../hooks/useUser';
+import { deleteUser } from '../../features/user/user-slice';
 
-interface HeaderSearchProps {
-  links: { link: string; label: string }[];
-}
-
-function HeaderSearch({ links }: HeaderSearchProps) {
+function HeaderSearch() {
   const { classes, cx } = useHeaderStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-
-  const items = links.map((link) => (
-    <NavLink
-      key={link.label}
-      to={link.link}
-      className={classes.link}
-    >
-      {link.label}
-    </NavLink>
-  ));
+  const user = useUserSelector((state) => state.user.user);
+  const dispatch = useUserDispatch();
 
   const categoriesSelect = (
     <Select
@@ -47,6 +37,11 @@ function HeaderSearch({ links }: HeaderSearchProps) {
     />
   );
 
+  const logout = () => {
+    dispatch(deleteUser());
+    localStorage.clear();
+  };
+
   return (
     <Header height="auto" className={classes.header}>
       <div className={classes.inner}>
@@ -56,10 +51,6 @@ function HeaderSearch({ links }: HeaderSearchProps) {
             <Text className={classes.textLogo}>TS Store</Text>
           </Group>
         </NavLink>
-
-        <Group spacing={5} className={classes.links}>
-          {items}
-        </Group>
 
         <Autocomplete
           size="md"
@@ -73,39 +64,53 @@ function HeaderSearch({ links }: HeaderSearchProps) {
           rightSectionWidth={120}
         />
 
-        <Group spacing={12}>
-          <Menu
-            width={260}
-            position="bottom-end"
-            transition="pop-top-right"
-            onClose={() => setUserMenuOpened(false)}
-            onOpen={() => setUserMenuOpened(true)}
-          >
-            <Menu.Target>
-              <UnstyledButton
-                className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
-              >
-                <Group spacing={7}>
-                  <Avatar radius="xl" size={28} />
-                  <Text weight={500} size="md" sx={{ lineHeight: 1 }} mr={3}>
-                    Dua Lipa
-                  </Text>
-                  <IconChevronDown size={20} stroke={1.5} />
-                </Group>
-              </UnstyledButton>
-            </Menu.Target>
+        <Group spacing={4}>
+          {user.email !== '' ? (
+            <Menu
+              width={260}
+              position="bottom-end"
+              transition="pop-top-right"
+              onClose={() => setUserMenuOpened(false)}
+              onOpen={() => setUserMenuOpened(true)}
+            >
+              <Menu.Target>
+                <UnstyledButton
+                  className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+                >
+                  <Group spacing={7}>
+                    <Avatar radius="xl" size={28} />
+                    <Text weight={500} size="md" sx={{ lineHeight: 1 }} mr={3}>
+                      {`${user.firstName} ${user.lastName.charAt(0)}.`}
+                    </Text>
+                    <IconChevronDown size={20} stroke={1.5} />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
 
-            <Menu.Dropdown>
-              <Menu.Label>Settings</Menu.Label>
-              <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
-                Account settings
-              </Menu.Item>
-              <Menu.Item icon={<IconSwitchHorizontal size={14} stroke={1.5} />}>
-                Change account
-              </Menu.Item>
-              <Menu.Item icon={<IconLogout size={14} stroke={1.5} />}>Logout</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+              <Menu.Dropdown>
+                <Menu.Label>Settings</Menu.Label>
+                <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
+                  Account settings
+                </Menu.Item>
+                <Menu.Item icon={<IconSwitchHorizontal size={14} stroke={1.5} />}>
+                  Change account
+                </Menu.Item>
+                <Menu.Item
+                  icon={<IconLogout size={14} stroke={1.5} />}
+                  onClick={logout}
+                >
+                  Logout
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          ) : (
+            <NavLink to="/auth" className={classes.link}>
+              <Center style={{ gap: 8 }}>
+                <IconUserCircle stroke={1} size={28} />
+                <Text>Sign In</Text>
+              </Center>
+            </NavLink>
+          )}
 
           <NavLink to="/orders" className={classes.link}>
             <Center style={{ gap: 8 }}>
