@@ -18,6 +18,8 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IconX } from '@tabler/icons';
 
+import { useUserDispatch } from '../../hooks/useUser';
+import { saveUser } from '../../features/user/user-slice';
 import { signin, signup } from '../../services/services';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { AuthResponse } from '../../types/types';
@@ -33,6 +35,7 @@ function Authentication(props: PaperProps) {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useLocalStorage<AuthResponse>('user');
   const navigate = useNavigate();
+  const dispatch = useUserDispatch();
 
   const form = useForm({
     initialValues: {
@@ -53,6 +56,7 @@ function Authentication(props: PaperProps) {
     if (type === AuthForm.LOGIN) {
       await signin(form.values)
         .then((response) => {
+          dispatch(saveUser(response.data.result));
           setUser(response.data);
         })
         .catch((error: AxiosError) => {
@@ -69,6 +73,7 @@ function Authentication(props: PaperProps) {
     } else {
       await signup(form.values)
         .then((response) => {
+          dispatch(saveUser(response.data.result));
           setUser(response.data);
         })
         .catch((error: AxiosError) => {
