@@ -34,7 +34,7 @@ function Product({ product }: ProductProps) {
         <Text weight={500}>{product.name}</Text>
       </Group>
 
-      <Text size="lg">
+      <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
         {formatMoney(Number(product.sale_price))}
       </Text>
     </Card>
