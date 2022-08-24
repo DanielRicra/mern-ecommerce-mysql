@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
-import { ProductsAction, ProductsActionsKind, ProductsState } from '../types/types';
+import { ProductsAction, ActionsTypes, ProductsState } from '../types/types';
 
-const defaultProductResponse = {
+const defaultProductsResponse = {
   page: 0,
   results: [],
   total_pages: 0,
@@ -11,30 +11,30 @@ const defaultProductResponse = {
 export const INITIAL_STATE: ProductsState = {
   loading: false,
   error: false,
-  productResponse: defaultProductResponse,
+  productsResponse: defaultProductsResponse,
 };
 
 const productsReducer: Reducer<ProductsState, ProductsAction> = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case ProductsActionsKind.FETCH_START:
+    case ActionsTypes.FETCH_START:
       return {
         ...state,
         loading: true,
         error: false,
       };
-    case ProductsActionsKind.FETCH_SUCCESS:
+    case ActionsTypes.FETCH_SUCCESS:
       return {
         loading: false,
-        productResponse: payload || defaultProductResponse,
+        productsResponse: payload || defaultProductsResponse,
         error: false,
       };
-    case ProductsActionsKind.FETCH_ERROR:
+    case ActionsTypes.FETCH_ERROR:
       return {
         loading: false,
         error: true,
-        productResponse: defaultProductResponse,
+        productsResponse: defaultProductsResponse,
       };
     default:
       return state;
