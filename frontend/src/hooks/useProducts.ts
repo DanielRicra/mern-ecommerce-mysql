@@ -1,7 +1,7 @@
 import { useState, useEffect, useReducer } from 'react';
 import productsReducer, { INITIAL_STATE } from '../reducers/productsReducer';
 import { findAllProducts } from '../services/services';
-import { ProductsActionsKind } from '../types/types';
+import { ActionsTypes } from '../types/types';
 
 const useProducts = () => {
   const [state, dispatch] = useReducer(productsReducer, INITIAL_STATE);
@@ -10,14 +10,14 @@ const useProducts = () => {
   useEffect(() => {
     let isCancelled = false;
     async function getAllProducts(p: number) {
-      dispatch({ type: ProductsActionsKind.FETCH_START });
+      dispatch({ type: ActionsTypes.FETCH_START });
       try {
         const response = await findAllProducts(p);
         if (!isCancelled) {
-          dispatch({ type: ProductsActionsKind.FETCH_SUCCESS, payload: response.data });
+          dispatch({ type: ActionsTypes.FETCH_SUCCESS, payload: response.data });
         }
       } catch (error) {
-        dispatch({ type: ProductsActionsKind.FETCH_ERROR });
+        dispatch({ type: ActionsTypes.FETCH_ERROR });
       }
     }
     getAllProducts(page);
@@ -30,7 +30,7 @@ const useProducts = () => {
   return {
     loading: state.loading,
     error: state.error,
-    productsResponse: state.productResponse,
+    productsResponse: state.productsResponse,
     setPage,
   };
 };
