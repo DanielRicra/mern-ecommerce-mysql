@@ -6,10 +6,13 @@ import {
   Text,
 } from '@mantine/core';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ProductProps } from '../../../types/types';
 import formatMoney from '../../../utils/format-money';
 
 function Product({ product }: ProductProps) {
+  const navigate = useNavigate();
+
   return (
     <Card
       shadow="sm"
@@ -18,6 +21,7 @@ function Product({ product }: ProductProps) {
       withBorder
       key={product.product_id}
       style={{ minWidth: '240px', cursor: 'pointer' }}
+      onClick={() => navigate(`/products/${product.product_id}`)}
     >
       <CardSection>
         <Image
