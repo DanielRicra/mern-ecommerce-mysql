@@ -92,7 +92,6 @@ function ProductDetails() {
                 radius="md"
                 size="md"
                 fullWidth
-                // TODO: fix this, A non-serializable value was detected...
                 onClick={() => dispatch(addToCart({ product, quantity: Number(quantity) }))}
               >
                 Add to cart
