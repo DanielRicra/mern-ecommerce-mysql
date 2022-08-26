@@ -1,6 +1,12 @@
 /* eslint-disable no-param-reassign */
 import axios, { AxiosRequestConfig } from 'axios';
-import { SigninPostData, AuthResponse, SignupPostData } from '../types/types';
+import {
+  SigninPostData,
+  AuthResponse,
+  SignupPostData,
+  ProductsResponse,
+  Product,
+} from '../types/types';
 
 const API = axios.create({ baseURL: 'http://localhost:3001/api' });
 
@@ -25,3 +31,9 @@ export const signin = (formData: SigninPostData) => API
 
 export const signup = (formData: SignupPostData) => API
   .post<AuthResponse>('/user/signup', formData);
+
+export const findAllProducts = (page: number) => API
+  .get<ProductsResponse>(`/products?page=${page}`);
+
+export const findProductById = (productId: number) => API
+  .get<Product>(`/products/${productId}`);
