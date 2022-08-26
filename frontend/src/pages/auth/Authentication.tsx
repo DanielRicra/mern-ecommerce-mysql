@@ -18,7 +18,7 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IconX } from '@tabler/icons';
 
-import { useUserDispatch } from '../../hooks/useUser';
+import { useAppDispatch } from '../../hooks/hooks';
 import { saveUser } from '../../features/user/user-slice';
 import { signin, signup } from '../../services/services';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -35,7 +35,7 @@ function Authentication(props: PaperProps) {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useLocalStorage<AuthResponse>('user');
   const navigate = useNavigate();
-  const dispatch = useUserDispatch();
+  const dispatch = useAppDispatch();
 
   const form = useForm({
     initialValues: {
