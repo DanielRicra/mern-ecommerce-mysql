@@ -12,14 +12,17 @@ import { NavLink } from 'react-router-dom';
 import ToggleThemetButton from '../../components/ToggleThemeButton';
 import useHeaderStyles from './styles';
 import brandLogo from '../../assets/brand-logo.png';
-import { useUserSelector, useUserDispatch } from '../../hooks/useUser';
+import { useAppSelector, useAppDispatch } from '../../hooks/hooks';
 import { deleteUser } from '../../features/user/user-slice';
 
 function HeaderSearch() {
   const { classes, cx } = useHeaderStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const user = useUserSelector((state) => state.user.user);
-  const dispatch = useUserDispatch();
+  const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
+  const cartProducts = useAppSelector((state) => state.cart.cartProducts);
+
+  const cartProductsQuantity = cartProducts.reduce((amount, cp) => cp.quantity + amount, 0);
 
   const categoriesSelect = (
     <Select
@@ -121,7 +124,7 @@ function HeaderSearch() {
 
           <NavLink to="/cart" className={classes.link}>
             <Center style={{ gap: 8 }}>
-              <Indicator size={16} label="0">
+              <Indicator size={16} label={cartProductsQuantity}>
                 <IconShoppingCart size={28} stroke={1} />
               </Indicator>
               <Text>Cart</Text>
