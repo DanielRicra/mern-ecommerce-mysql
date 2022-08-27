@@ -30,7 +30,7 @@ function Product({ product }: ProductProps) {
           height={160}
           width={240}
           alt={product.name}
-          withPlaceholder
+          withPlaceholder={!product.img_url}
         />
       </CardSection>
 
