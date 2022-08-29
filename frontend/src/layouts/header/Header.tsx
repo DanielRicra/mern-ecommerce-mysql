@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Header, Autocomplete, Group, Image, Text, Center, Indicator, Avatar,
-  Menu, UnstyledButton, Select,
+  Header, Group, Image, Text, Center, Indicator, Avatar,
+  Menu, UnstyledButton,
 } from '@mantine/core';
 import {
-  IconSearch, IconShoppingCart, IconTruckDelivery,
+  IconShoppingCart, IconTruckDelivery,
   IconChevronDown, IconSettings, IconSwitchHorizontal, IconLogout, IconUserCircle,
 } from '@tabler/icons';
 import { NavLink } from 'react-router-dom';
@@ -14,6 +14,7 @@ import useHeaderStyles from './styles';
 import brandLogo from '../../assets/brand-logo.png';
 import { useAppSelector, useAppDispatch } from '../../hooks/hooks';
 import { deleteUser } from '../../features/user/user-slice';
+import SearchInput from './SearchInput';
 
 function HeaderSearch() {
   const { classes, cx } = useHeaderStyles();
@@ -23,22 +24,6 @@ function HeaderSearch() {
   const cartProducts = useAppSelector((state) => state.cart.cartProducts);
 
   const cartProductsQuantity = cartProducts.reduce((amount, cp) => cp.quantity + amount, 0);
-
-  const categoriesSelect = (
-    <Select
-      data={['All', 'Milks', 'Meat', 'Drinks', 'Vegetables']}
-      defaultValue="All"
-      variant="filled"
-      size="md"
-      styles={{
-        input: {
-          borderRadius: '8px',
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-        },
-      }}
-    />
-  );
 
   const logout = () => {
     dispatch(deleteUser());
@@ -55,17 +40,7 @@ function HeaderSearch() {
           </Group>
         </NavLink>
 
-        <Autocomplete
-          size="md"
-          radius="md"
-          style={{ flex: 1 }}
-          className={classes.search}
-          icon={<IconSearch size={16} stroke={1.5} />}
-          data={['item 1', 'key 4', 'mouse 3', 'lantern 4', 'perro 5', 'gato 6', 'computer 7', 'pencil 8']}
-          placeholder="Search"
-          rightSection={categoriesSelect}
-          rightSectionWidth={120}
-        />
+        <SearchInput classes={classes.search} />
 
         <Group spacing={4}>
           {user.email !== '' ? (
