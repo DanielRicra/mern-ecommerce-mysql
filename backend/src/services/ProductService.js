@@ -44,3 +44,29 @@ export const updateProduct = async (product, productId) => {
 export const deleteProductById = async (productId) => {
    return await pool.query('DELETE FROM products WHERE product_id = ?', [productId]);
 };
+
+export const findProductByNameMatch = async (name, page = 1, categoryId = 0) => {
+   let query = categoryId === 0 ? (
+      'SELECT * FROM products WHERE '
+   ) : (
+      `SELECT * FROM products WHERE category_id=${categoryId} AND `
+   );
+   return await pool
+      .query(
+         `${query} name COLLATE UTF8_GENERAL_CI LIKE ? LIMIT ${(page - 1) * 20}, 20`,
+         [`%${name}%`]
+      );
+};
+
+export const countProductsByNameMatch = async (name, categoryId = 0) => {
+   let query = categoryId === 0 ? (
+      'SELECT COUNT(product_id) AS count_products FROM products WHERE '
+   ) : (
+      `SELECT COUNT(product_id) AS count_products FROM products WHERE category_id=${categoryId} AND `
+   );
+   return await pool
+      .query(
+         `${query} name COLLATE UTF8_GENERAL_CI LIKE ?`,
+         [`%${name}%`]
+      );
+};
