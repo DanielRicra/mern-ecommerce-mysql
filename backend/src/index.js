@@ -6,7 +6,8 @@ import {
    categoryRouter, 
    productRouter,
    purchaseRouter, 
-   userRouter
+   searchRouter, 
+   userRouter,
 } from './routes/index.js';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use('/api/user', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/purchases', purchaseRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/search', searchRouter);
 
 app.get('/', (req, res) => {
    res.send('Api is ready');
