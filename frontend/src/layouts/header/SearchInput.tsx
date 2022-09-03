@@ -1,6 +1,7 @@
 import { ActionIcon, Autocomplete, Select } from '@mantine/core';
 import { IconSearch } from '@tabler/icons';
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useCategories from '../../hooks/useCategories';
 
 type SearchInputProps = {
@@ -11,6 +12,7 @@ function SearchInput({ classes }: SearchInputProps) {
   const { categories } = useCategories();
   const [categoryId, setCategoryId] = useState<string | null>('0');
   const [query, setQuery] = useState('');
+  const navigate = useNavigate();
 
   const searchButton = (
     <ActionIcon
@@ -41,8 +43,8 @@ function SearchInput({ classes }: SearchInputProps) {
   const selectData = useMemo(() => formatSelectData(), [categories]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    // TODO: fetch search product by name
     event.preventDefault();
+    navigate(`/search?q=${query}&catId=${categoryId}`);
   };
 
   return (
@@ -79,7 +81,9 @@ function SearchInput({ classes }: SearchInputProps) {
             borderBottomLeftRadius: 0,
           },
         }}
-        onItemSubmit={(item) => {}}
+        onItemSubmit={({ value }) => {
+          navigate(`/search?q=${value}&catId=${categoryId}`);
+        }}
         onChange={setQuery}
       />
     </form>
