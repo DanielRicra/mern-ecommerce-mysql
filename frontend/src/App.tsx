@@ -14,6 +14,7 @@ import ProductDetails from './pages/product/ProductDetails';
 import Cart from './pages/cart/Cart';
 import Footer from './layouts/footer/Footer';
 import footerLinks from './assets/footer-links.json';
+import SearchResults from './pages/search/SearchResults';
 
 function App() {
   const { colorScheme, toggleColorScheme } = useAppTheme();
@@ -34,6 +35,7 @@ function App() {
             <Route path="/auth" element={<Authentication />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/products/:productId" element={<ProductDetails />} />
+            <Route path="/search" element={<SearchResults />} />
             <Route path="*" element={<NothingFoundBackground />} />
           </Routes>
           <Footer data={footerLinks.data} />
