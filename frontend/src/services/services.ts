@@ -6,6 +6,7 @@ import {
   SignupPostData,
   ProductsResponse,
   Product,
+  CategoriesResponse,
 } from '../types/types';
 
 const API = axios.create({ baseURL: 'http://localhost:3001/api' });
@@ -37,3 +38,8 @@ export const findAllProducts = (page: number) => API
 
 export const findProductById = (productId: number) => API
   .get<Product>(`/products/${productId}`);
+
+export const findAllCategories = () => API.get<CategoriesResponse>('/categories');
+
+export const findProductsByNameAndCategory = (name: string, categoryId: number, page = 1) => API
+  .get<ProductsResponse>(`/search?q=${name}&catId=${categoryId}&page=${page}`);
