@@ -1,5 +1,5 @@
 import { ActionIcon, Autocomplete, Select } from '@mantine/core';
-import { IconSearch } from '@tabler/icons';
+import { IconChevronDown, IconSearch } from '@tabler/icons';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCategories from '../../hooks/useCategories';
@@ -56,12 +56,15 @@ function SearchInput({ classes }: SearchInputProps) {
         size="md"
         radius="md"
         width="auto"
+        rightSection={<IconChevronDown size={14} />}
+        rightSectionWidth={30}
         style={{ maxWidth: '240px', flex: 1, fontSize: '12px' }}
         styles={{
           input: {
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
           },
+          rightSection: { pointerEvents: 'none' },
         }}
         onChange={setCategoryId}
       />
