@@ -1,6 +1,12 @@
 import { format } from 'date-fns';
 import { saveAllPurchaseProducts } from '../services/PurchaseProductsService.js';
-import { countPurchases, findAllPurchases, savePurchase } from '../services/PurchaseService.js';
+import {
+   countPurchases,
+   countPurchasesByUserId,
+   findAllPurchases,
+   findPurchasesByUserId,
+   savePurchase
+} from '../services/PurchaseService.js';
 
 const paymentTypes = ['cash', 'paypal', 'credit_card', 'debit_card'];
 
@@ -22,6 +28,32 @@ export const getAllPurchases = async (req, res) => {
          total_results: countResult[0].purchases_count,
          total_pages: totaPages
       });
+   } catch (error) {
+      return res.status(500).json({ message: error.message });
+   }
+};
+
+export const getPurchasesByUserId = async (req, res) => {
+   const { userId } = req.params;
+   const { page = 1 } = req.query;
+
+   try {
+      const [countResult] = await countPurchasesByUserId(userId);
+      const totaPages = Math.ceil(countResult[0].purchases_count/20);
+
+      if (isNaN(page) || (!isNaN(page) && page < 1 || page > totaPages)) {
+         return res.status(404).json({ message: 'Page not found' });
+      }
+
+      const [result] = await findPurchasesByUserId(userId, page);
+
+      res.status(200).json({
+         page: Number(page),
+         results: result[0].results,
+         total_results: countResult[0].purchases_count,
+         total_pages: totaPages
+      });
+
    } catch (error) {
       return res.status(500).json({ message: error.message });
    }
