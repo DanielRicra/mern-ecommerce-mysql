@@ -39,9 +39,9 @@ export const getPurchasesByUserId = async (req, res) => {
 
    try {
       const [countResult] = await countPurchasesByUserId(userId);
-      const totaPages = Math.ceil(countResult[0].purchases_count/20);
+      const totalPages = Math.ceil(countResult[0].purchases_count/20);
 
-      if (isNaN(page) || (!isNaN(page) && page < 1 || page > totaPages)) {
+      if (isNaN(page) || (!isNaN(page) && countResult[0].count_products !== 0 && (page < 1 || page > totalPages))) {
          return res.status(404).json({ message: 'Page not found' });
       }
 
@@ -51,7 +51,7 @@ export const getPurchasesByUserId = async (req, res) => {
          page: Number(page),
          results: result[0].results,
          total_results: countResult[0].purchases_count,
-         total_pages: totaPages
+         total_pages: totalPages
       });
 
    } catch (error) {
