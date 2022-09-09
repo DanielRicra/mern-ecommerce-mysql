@@ -7,6 +7,7 @@ import {
   ProductsResponse,
   Product,
   CategoriesResponse,
+  PurchasesResponse,
 } from '../types/types';
 
 const API = axios.create({ baseURL: 'http://localhost:3001/api' });
@@ -43,3 +44,9 @@ export const findAllCategories = () => API.get<CategoriesResponse>('/categories'
 
 export const findProductsByNameAndCategory = (name: string, categoryId: number, page = 1) => API
   .get<ProductsResponse>(`/search?q=${name}&catId=${categoryId}&page=${page}`);
+
+export const findAllPurchases = (page: number) => API
+  .get<PurchasesResponse>(`/purchases?page=${page}`);
+
+export const findPurchasesByUserId = (page: number, userId: number) => API
+  .get<PurchasesResponse>(`/purchases/${userId}?page=${page}`);
