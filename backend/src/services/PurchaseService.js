@@ -30,14 +30,14 @@ export const findPurchasesByUserId = async (userId, page = 1) => {
    return await pool.query(
       `SELECT 
          JSON_ARRAYAGG(JSON_OBJECT(
-            'purchaseId', P.purchase_id, 'user_id', P.user_id, 'purchaseDate', P.purchase_date, 'comment', P.comment, 'status', P.status, 'paymentType', P.payment_type , 'products', PP.products
+            'purchase_id', P.purchase_id, 'user_id', P.user_id, 'purchase_date', P.purchase_date, 'comment', P.comment, 'status', P.status, 'payment_type', P.payment_type , 'products', PP.products
          )) as results
       FROM purchases P
          INNER JOIN (
             SELECT
                pp.purchase_id,
                JSON_ARRAYAGG(JSON_OBJECT(
-                  'productId', pp.product_id, 'totalPrice', pp.total, 'quantity', pp.quantity ,'name', Pr.name, 'description', Pr.description, 'unitSalePrice', Pr.sale_price, 'barCode', Pr.bar_code, 'categoryId', Pr.category_id
+                  'product_id', pp.product_id, 'total_price', pp.total, 'quantity', pp.quantity ,'name', Pr.name, 'description', Pr.description, 'sale_price', Pr.sale_price, 'bar_code', Pr.bar_code, 'category_id', Pr.category_id
                )) products
             FROM purchase_products pp
                INNER JOIN products Pr ON Pr.product_id=pp.product_id
