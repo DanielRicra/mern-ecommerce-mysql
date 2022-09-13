@@ -7,7 +7,7 @@ import {
   IconShoppingCart, IconTruckDelivery,
   IconChevronDown, IconSettings, IconSwitchHorizontal, IconLogout, IconUserCircle,
 } from '@tabler/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import ToggleThemetButton from '../../components/ToggleThemeButton';
 import useHeaderStyles from './styles';
@@ -22,12 +22,14 @@ function HeaderSearch() {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
   const cartProducts = useAppSelector((state) => state.cart.cartProducts);
+  const navigate = useNavigate();
 
   const cartProductsQuantity = cartProducts.reduce((amount, cp) => cp.quantity + amount, 0);
 
   const logout = () => {
     dispatch(deleteUser());
     localStorage.clear();
+    navigate('/auth');
   };
 
   return (
