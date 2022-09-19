@@ -10,7 +10,8 @@ const auth = (req, res, next) => {
    
    try {
       const decodedData = jwt.verify(token, process.env.EXPRESS_SECRET_KEY);
-      if (!decodedData.id) {
+      
+      if (!decodedData.userId) {
          return res.status(401).json({ error: 'There is no id in decoded token' });
       }
 
