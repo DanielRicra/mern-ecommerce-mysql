@@ -7,11 +7,11 @@ import {
   Text,
 } from '@mantine/core';
 import React from 'react';
-import { updateQuantityFromCart } from '../../../features/cart/cart-slice';
-import { useAppDispatch } from '../../../hooks/hooks';
-import { CartItemProps } from '../../../types/types';
-import getDataForSelectUIComponent from '../../../utils/data-generator';
-import formatMoney from '../../../utils/format-money';
+import { updateQuantityFromCart } from '../../features/cart/cart-slice';
+import { useAppDispatch } from '../../hooks/hooks';
+import { CartItemProps } from '../../types/types';
+import getDataForSelectUIComponent from '../../utils/data-generator';
+import formatMoney from '../../utils/format-money';
 import useStyles from './styles';
 
 function CartItem({ product, quantity }: CartItemProps) {

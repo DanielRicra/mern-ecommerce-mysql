@@ -2,7 +2,7 @@ import {
   Stack,
 } from '@mantine/core';
 import React from 'react';
-import { ShoppingCartProps } from '../../../types/types';
+import { ShoppingCartProps } from '../../types/types';
 import CartItem from './CartItem';
 
 function ShoppingCart({ cartItems }: ShoppingCartProps) {
