@@ -28,7 +28,7 @@ function HeaderSearch() {
 
   const logout = () => {
     dispatch(deleteUser());
-    localStorage.clear();
+    localStorage.removeItem('user');
     navigate('/auth');
   };
 
