@@ -24,20 +24,27 @@ function PurchaseList({ purchases }: PurchaseListProps) {
       {purchases.map((purchase, index) => (
         <Stack key={purchase.purchase_id} spacing="sm">
           <Group style={{ borderBottom: '1px solid #666' }}>
-            <Text>
-              Purchase N°:&nbsp;
-              {index + 1}
-            </Text>
             <Group>
-              <Text>Date: </Text>
+              <Text weight="bold">Purchase N°:&nbsp;</Text>
+              {index + 1}
+            </Group>
+            <Group>
+              <Text weight="bold">Date: </Text>
               {purchase.purchase_date ? formatDatetime(purchase.purchase_date) : '--:--:--'}
             </Group>
-            <Text>
-              Total:&nbsp;
+            <Group>
+              <Text weight="bold">Total: </Text>
               {formatMoney(purchase.products.reduce((quantity, item) => (
                 Number(item.sale_price) * item.quantity + quantity
               ), 0))}
-            </Text>
+            </Group>
+            <Group>
+              {purchase.status === 1 ? (
+                <Text color="green">Closed</Text>
+              ) : (
+                <Text color="orange">Pending order</Text>
+              )}
+            </Group>
           </Group>
           {purchase.products.map((product) => (
             <Group key={product.product_id} px={16} position="apart">
@@ -50,15 +57,14 @@ function PurchaseList({ purchases }: PurchaseListProps) {
                   withPlaceholder={!product.img_url}
                   alt={product.name}
                 />
-                <Text>{product.name}</Text>
+                <Stack spacing="sm">
+                  <Text>{product.name}</Text>
+                  <Text>
+                    Quantity:&nbsp;
+                    {product.quantity}
+                  </Text>
+                </Stack>
               </Group>
-              <Stack spacing="sm">
-                <Text>{formatMoney(Number(product.sale_price))}</Text>
-                <Text>
-                  Quantity:&nbsp;
-                  {product.quantity}
-                </Text>
-              </Stack>
             </Group>
           ))}
         </Stack>
