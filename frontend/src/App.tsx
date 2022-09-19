@@ -4,7 +4,6 @@ import {
   ColorSchemeProvider, MantineProvider, Paper,
 } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
-import './App.css';
 import useAppTheme from './hooks/useAppTheme';
 import HeaderSearch from './layouts/header/Header';
 import Home from './pages/home/Home';
@@ -15,6 +14,7 @@ import Cart from './pages/cart/Cart';
 import Footer from './layouts/footer/Footer';
 import footerLinks from './assets/footer-links.json';
 import SearchResults from './pages/search/SearchResults';
+import Orders from './pages/orders/Orders';
 
 function App() {
   const { colorScheme, toggleColorScheme } = useAppTheme();
@@ -36,6 +36,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/products/:productId" element={<ProductDetails />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="*" element={<NothingFoundBackground />} />
           </Routes>
           <Footer data={footerLinks.data} />
