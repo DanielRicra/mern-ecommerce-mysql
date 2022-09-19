@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import productReducer, { INITIAL_STATE } from '../reducers/productReducer';
+import productReducer, { INITIAL_STATE } from '../reducers/product-reducer';
 import { findProductById } from '../services/services';
 import { ActionsTypes } from '../types/types';
 
