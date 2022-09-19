@@ -8,6 +8,8 @@ import {
   Product,
   CategoriesResponse,
   PurchasesResponse,
+  SavePurchaseResponse,
+  SavePurchaseBody,
 } from '../types/types';
 
 const API = axios.create({ baseURL: 'http://localhost:3001/api' });
@@ -50,3 +52,6 @@ export const findAllPurchases = (page: number) => API
 
 export const findPurchasesByUserId = (page: number, userId: number) => API
   .get<PurchasesResponse>(`/purchases/${userId}?page=${page}`);
+
+export const savePurchase = (body: SavePurchaseBody) => API
+  .post<SavePurchaseResponse>('/purchases', body);
