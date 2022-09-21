@@ -12,7 +12,7 @@ import {
   SavePurchaseBody,
 } from '../types/types';
 
-const API = axios.create({ baseURL: 'http://localhost:3001/api' });
+const API = axios.create({ baseURL: 'https://mern-ecommerce-mysql-production.up.railway.app/api' });
 
 API.interceptors.request.use((config: AxiosRequestConfig) => {
   const user = localStorage.getItem('user');
