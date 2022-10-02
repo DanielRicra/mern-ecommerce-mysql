@@ -4,6 +4,7 @@ import {
   Group,
   Image,
   Text,
+  Tooltip,
 } from '@mantine/core';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,7 @@ function Product({ product }: ProductProps) {
       radius="md"
       withBorder
       key={product.product_id}
-      style={{ minWidth: '240px', cursor: 'pointer' }}
+      style={{ width: '240px', cursor: 'pointer' }}
       onClick={() => navigate(`/products/${product.product_id}`)}
     >
       <CardSection>
@@ -35,7 +36,27 @@ function Product({ product }: ProductProps) {
       </CardSection>
 
       <Group position="apart" mt="md" mb="xs">
-        <Text weight={500}>{product.name}</Text>
+        <Tooltip
+          label={product.name}
+          color="blue"
+          withArrow
+          offset={14}
+          multiline
+          transition="slide-up"
+          transitionDuration={200}
+          arrowSize={6}
+        >
+          <Text
+            weight={500}
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {product.name}
+          </Text>
+        </Tooltip>
       </Group>
 
       <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
