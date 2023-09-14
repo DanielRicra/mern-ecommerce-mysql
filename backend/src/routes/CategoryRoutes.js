@@ -1,10 +1,14 @@
 import { Router } from 'express';
-import { addCategory, getAllCategories } from '../controllers/CategoryController.js';
+import { CategoryController } from '../controllers/CategoryController.js';
 import auth from '../middlewares/auth.js';
 
-const router = Router();
+export const createCategoryRouter = (categoryModel) => {
+   const router = Router();
 
-router.get('/', getAllCategories);
-router.post('/', auth, addCategory);
+   const categoryController = new CategoryController(categoryModel);
 
-export default router;
+   router.get('/', categoryController.getAll);
+   router.post('/', auth, categoryController.create);
+
+   return router;
+};
