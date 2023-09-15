@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ProductController } from '../controllers/ProductController.js';
+import { ProductController } from '../controllers/product.js';
 import auth from '../middlewares/auth.js';
 
 export const createProductRouter = (productModel) => {

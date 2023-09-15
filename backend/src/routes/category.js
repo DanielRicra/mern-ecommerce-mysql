@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { CategoryController } from '../controllers/CategoryController.js';
+import { CategoryController } from '../controllers/category.js';
 import auth from '../middlewares/auth.js';
 
 export const createCategoryRouter = (categoryModel) => {
