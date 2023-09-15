@@ -1,6 +1,6 @@
 import { app, server } from '../src/index.js';
 import request from 'supertest';
-import { pool } from '../src/config/DatabseConfig.js';
+import { pool } from '../src/config/database.js';
 
 const api = request(app);
 

@@ -1,4 +1,4 @@
-import { pool } from '../config/DatabseConfig.js';
+import { pool } from '../config/database.js';
 
 export const findUserByEmail = async (email) => {
    return await pool.query('SELECT * FROM users WHERE email=?', [email]);

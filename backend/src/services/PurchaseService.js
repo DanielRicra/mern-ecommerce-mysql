@@ -1,4 +1,4 @@
-import { pool } from '../config/DatabseConfig.js';
+import { pool } from '../config/database.js';
 
 
 export const findAllPurchases = async (page = 1) => {
