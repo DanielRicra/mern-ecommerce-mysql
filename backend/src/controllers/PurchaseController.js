@@ -1,94 +1,112 @@
-import { format } from 'date-fns';
-import { saveAllPurchaseProducts } from '../services/PurchaseProductsService.js';
-import {
-   countPurchases,
-   countPurchasesByUserId,
-   findAllPurchases,
-   findPurchasesByUserId,
-   savePurchase
-} from '../services/PurchaseService.js';
+import { validatePartialQuery } from '../schemas/query.js';
+import { validatePurchase } from '../schemas/purchase.js';
 
-const paymentTypes = ['cash', 'paypal', 'credit_card', 'debit_card'];
-
-export const getAllPurchases = async (req, res) => {
-   const { page =  1 } = req.query;
-   try {
-      const [countResult] = await countPurchases();
-      const totaPages = Math.ceil(countResult[0].purchases_count/20);
-
-      if (isNaN(page) || (!isNaN(page) && page < 1 || page > totaPages)) {
-         return res.status(404).json({ message: 'Page not found' });
-      }
-
-      const [resultPurchases] = await findAllPurchases(page);
-      
-      res.status(200).json({ 
-         page: Number(page),
-         results: resultPurchases[0].results,
-         total_results: countResult[0].purchases_count,
-         total_pages: totaPages
-      });
-   } catch (error) {
-      return res.status(500).json({ message: error.message });
-   }
-};
-
-export const getPurchasesByUserId = async (req, res) => {
-   const { userId } = req.params;
-   const { page = 1 } = req.query;
-
-   try {
-      const [countResult] = await countPurchasesByUserId(userId);
-      const totalPages = Math.ceil(countResult[0].purchases_count/20);
-
-      if (countResult[0].purchases_count === 0) {
-         return res.status(200).json({ page: 0, results: [], total_results: 0, total_pages: 0 });
-      }
-
-      if (isNaN(page) || (!isNaN(page) && (page < 1 || page > totalPages))) {
-         return res.status(404).json({ message: 'Page not found' });
-      }
-
-      const [result] = await findPurchasesByUserId(userId, page);
-
-      res.status(200).json({
-         page: Number(page),
-         results: result[0].results,
-         total_results: countResult[0].purchases_count,
-         total_pages: totalPages
-      });
-
-   } catch (error) {
-      return res.status(500).json({ message: error.message });
-   }
-};
-
-export const addPurchase = async (req, res) => {
-   const currentDateTime = format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss');
-   const { userId, purchaseDate = currentDateTime, paymentType, comment, state, items = [] } = req.body;
-
-   if (!paymentType || !paymentTypes.includes(paymentType.toLowerCase()) ||
-      items.length === 0) {
-      return res.status(400).json({ message: 'Invalid payment type or empty items list' });
+export class PurchaseController {
+   constructor(purchaseModel) {
+      this.purchaseModel = purchaseModel;
    }
 
-   let productsValues = '';
-   
-   try {
-      const [saveResult] = await savePurchase({userId, purchaseDate, paymentType, comment, state});
-      
-      for (let i = 0; i < items.length; i++) {
-         if (!items[i].productId || !items[i].quantity || !items[i].total) {
-            return res.status(400).json({ message: 'Invalid product data' });
+   getAll = async (req, res) => {
+      const result = validatePartialQuery(req.query);
+
+      if (!result.success) {
+         return res
+            .status(400)
+            .json({ message: JSON.parse(result.error.message) });
+      }
+      const { page = 1, take = 10 } = result.data;
+
+      try {
+         const count = await this.purchaseModel.count({});
+         const totalPages = count !== 0 ? Math.ceil(count / take) : 1;
+
+         if (page < 1 || page > totalPages) {
+            return res.status(404).json({ message: 'Page not found' });
          }
-         productsValues += `(${saveResult.insertId}, ${items[i].productId}, ${items[i].quantity}, ${items[i].total})${i === (items.length - 1) ? '': ','}`;
+
+         const purchases = await this.purchaseModel.getAll({
+            page,
+            take,
+         });
+
+         res.status(200).json({
+            page: page,
+            results: purchases ?? [],
+            total_results: count,
+            total_pages: totalPages,
+         });
+      } catch (error) {
+         return res.status(500).json({ message: 'Something went wrong' });
+      }
+   };
+
+   getByUser = async (req, res) => {
+      const { userId } = req.params;
+
+      const validatedResult = validatePartialQuery(req.query);
+
+      if (!validatedResult.success) {
+         return res
+            .status(400)
+            .json({ message: JSON.parse(validatedResult.error.message) });
+      }
+      const { page = 1, take = 10 } = validatedResult.data;
+
+      try {
+         const count = await this.purchaseModel.count({ userId });
+         const totalPages = count !== 0 ? Math.ceil(count / take) : 1;
+
+         if (page < 1 || page > totalPages) {
+            return res.status(404).json({ message: 'Page not found' });
+         }
+
+         const userPurchases = await this.purchaseModel.getByUser({
+            userId,
+            page,
+         });
+
+         res.status(200).json({
+            page: page,
+            results: userPurchases ?? [],
+            total_results: count,
+            total_pages: totalPages,
+         });
+      } catch (error) {
+         res.status(500).json({ message: 'Something went wrong' });
+      }
+   };
+
+   create = async (req, res) => {
+      const validatedResult = validatePurchase(req.body);
+
+      if (!validatedResult.success) {
+         return res
+            .status(400)
+            .json({ message: JSON.parse(validatedResult.error.message) });
       }
 
-      await saveAllPurchaseProducts(productsValues);
-      
-      return res.status(201).json({purchase_id: saveResult.insertId, userId, purchaseDate, paymentType, comment, state});
-   } catch (error) {
-      return res.status(500).json({ message: error.message });
-   }
-   
-};
+      const { items, paymentType, state, userId, comment } =
+         validatedResult.data;
+
+      try {
+         const newPurchase = await this.purchaseModel.create({
+            userId,
+            paymentType,
+            state,
+            comment,
+         });
+
+         const purchaseProducts = await this.purchaseModel.addProducts({
+            purchaseProducts: items,
+            purchaseId: newPurchase.purchase_id,
+         });
+
+         return res
+            .status(201)
+            .json({ ...newPurchase, products: purchaseProducts });
+      } catch (error) {
+         console.log(error);
+         res.status(500).json({ message: 'Something went wrong' });
+      }
+   };
+}
