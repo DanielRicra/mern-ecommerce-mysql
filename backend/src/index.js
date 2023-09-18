@@ -3,14 +3,16 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import {
+   createAuthRouter,
    createCategoryRouter,
    createProductRouter,
    createPurchaseRouter,
-   userRouter,
+   createUserRouter,
 } from './routes/index.js';
 import { CategoryModel } from './models/category.js';
 import { ProductModel } from './models/product.js';
 import { PurchaseModel } from './models/purchase.js';
+import { UserModel } from './models/user.js';
 
 dotenv.config();
 const app = express();
@@ -18,7 +20,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/user', userRouter);
+app.use('/api/users', createUserRouter(UserModel));
+app.use('/api/auth', createAuthRouter(UserModel));
 app.use('/api/products', createProductRouter(ProductModel));
 app.use('/api/purchases', createPurchaseRouter(PurchaseModel));
 app.use('/api/categories', createCategoryRouter(CategoryModel));
