@@ -3,14 +3,14 @@ import { z } from 'zod';
 const querySchema = z.object({
    name: z.string({ invalid_type_error: 'Name must be a string' }).default(''),
    page: z
-      .string()
+      .string({ invalid_type_error: 'Page param must be string' })
       .transform(Number)
       .pipe(
          z
             .number({ invalid_type_error: 'Page param must be a number' })
             .int({ message: 'Page param must be an integer' })
-            .default(1)
-      ),
+      )
+      .optional(),
    categoryId: z
       .string()
       .transform(Number)
@@ -33,7 +33,8 @@ const querySchema = z.object({
             .min(5, { message: 'Take param must be greater or equal than 10' })
             .max(50, { message: 'Take must be less or equal than 50' })
             .default(10)
-      ),
+      )
+      .optional(),
 });
 
 export function validateQuery({ name, page, categoryId, take }) {
