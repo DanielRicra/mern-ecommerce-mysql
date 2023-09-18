@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import {
-   getAllPurchases,
-   addPurchase,
-   getPurchasesByUserId
-} from '../controllers/PurchaseController.js';
+import { PurchaseController } from '../controllers/purchase.js';
 import auth from '../middlewares/auth.js';
 
-const router = Router();
+export const createPurchaseRouter = (purchaseModel) => {
+   const router = Router();
 
-router.get('/', getAllPurchases);
-router.get('/:userId', getPurchasesByUserId);
-router.post('/', auth, addPurchase);
+   const purchaseController = new PurchaseController(purchaseModel);
 
-export default router;
+   router.get('/', purchaseController.getAll);
+   router.get('/user/:userId', purchaseController.getByUser);
+   router.post('/', auth, purchaseController.create);
+
+   return router;
+};
