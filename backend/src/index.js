@@ -5,11 +5,12 @@ import dotenv from 'dotenv';
 import {
    createCategoryRouter,
    createProductRouter,
-   purchaseRouter,
+   createPurchaseRouter,
    userRouter,
 } from './routes/index.js';
 import { CategoryModel } from './models/category.js';
 import { ProductModel } from './models/product.js';
+import { PurchaseModel } from './models/purchase.js';
 
 dotenv.config();
 const app = express();
@@ -19,7 +20,7 @@ app.use(express.json());
 
 app.use('/api/user', userRouter);
 app.use('/api/products', createProductRouter(ProductModel));
-app.use('/api/purchases', purchaseRouter);
+app.use('/api/purchases', createPurchaseRouter(PurchaseModel));
 app.use('/api/categories', createCategoryRouter(CategoryModel));
 
 app.get('/', (req, res) => {
