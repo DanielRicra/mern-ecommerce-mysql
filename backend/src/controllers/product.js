@@ -1,8 +1,8 @@
 import {
    validatePartialProduct,
    validateProduct,
-   validateQuery,
 } from '../schemas/product.js';
+import { validateQuery } from '../schemas/query.js';
 
 export class ProductController {
    constructor(productModel) {
