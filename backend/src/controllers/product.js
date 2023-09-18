@@ -17,7 +17,7 @@ export class ProductController {
             .status(400)
             .json({ message: JSON.parse(result.error.message) });
       }
-      const { name, page, categoryId, take } = result.data;
+      const { name, page = 1, categoryId, take = 5 } = result.data;
 
       try {
          const count = await this.productModel.count({ categoryId, name });
