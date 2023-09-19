@@ -1,6 +1,6 @@
 import { ActionIcon, Autocomplete, Select } from '@mantine/core';
 import { IconChevronDown, IconSearch } from '@tabler/icons';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCategories from '../../hooks/useCategories';
 
