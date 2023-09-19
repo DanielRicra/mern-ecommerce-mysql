@@ -11,6 +11,7 @@ const initialState: ProductsSliceState = {
     total_pages: 0,
     total_results: 0,
   },
+  error: undefined
 };
 
 const productsSlice = createSlice({
@@ -26,8 +27,9 @@ const productsSlice = createSlice({
         state.status = 'succeeded';
         state.productsResponse = action.payload;
       })
-      .addCase(getProductByNameAndCategory.rejected, (state) => {
+      .addCase(getProductByNameAndCategory.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.payload?.errorMessage;
       });
   },
 });
