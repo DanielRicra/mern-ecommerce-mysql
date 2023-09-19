@@ -118,7 +118,8 @@ export interface CategoriesResponse {
 
 export interface ProductsSliceState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
-  productsResponse: ProductsResponse
+  productsResponse: ProductsResponse,
+  error: string | undefined
 }
 
 export interface Purchase {
