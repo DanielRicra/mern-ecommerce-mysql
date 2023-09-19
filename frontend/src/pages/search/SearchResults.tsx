@@ -8,7 +8,7 @@ import {
   Title,
 } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductList from '../../components/products/ProductList';
 import getProductsByNameAndCategory from '../../features/products/product-middleware';
@@ -19,16 +19,17 @@ function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams();
   const productsResponse = useAppSelector((state) => state.products.productsResponse);
   const status = useAppSelector((state) => state.products.status);
+  const error = useAppSelector((state) => state.products.error);
 
   useEffect(() => {
     let isCancelled = false;
 
-    const query = searchParams.get('q') || '%';
-    const categoryId = searchParams.get('catId');
+    const name = searchParams.get('name') || '%';
+    const categoryId = searchParams.get('categoryId');
     const pg = searchParams.get('page') || '1';
     if (!isCancelled) {
       dispatch(getProductsByNameAndCategory({
-        name: query,
+        name,
         categoryId: Number(categoryId),
         page: Number(pg),
       }));
@@ -39,10 +40,10 @@ function SearchResults() {
     };
   }, [searchParams]);
 
-  const handlePagination = (pg: number) => {
-    const query = searchParams.get('q') || '%';
-    const categoryId = searchParams.get('catId') || '0';
-    setSearchParams({ q: query, catId: categoryId, page: pg.toString() });
+  const handlePagination = (page: number) => {
+    const name = searchParams.get('name') || '%';
+    const categoryId = searchParams.get('categoryId') || '0';
+    setSearchParams({ name, categoryId, page: page.toString() });
   };
 
   return (
@@ -59,8 +60,8 @@ function SearchResults() {
                 color="violet"
                 radius="md"
                 page={productsResponse.page}
-                onChange={(pg: number) => {
-                  handlePagination(pg);
+                onChange={(page: number) => {
+                  handlePagination(page);
                 }}
               />
             </Center>
@@ -75,7 +76,7 @@ function SearchResults() {
               variant="outline"
               radius="md"
             >
-              Something bad happend, refresh the page or try again later
+              {error}
             </Alert>
           </Center>
         )}
