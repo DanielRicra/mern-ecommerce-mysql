@@ -25,6 +25,11 @@
     ],
     "rules": {
         "linebreak-style": 0,
-        "react/jsx-props-no-spreading": "off"
+        "react/jsx-props-no-spreading": "off",
+        "@typescript-eslint/indent": "off",
+        "no-param-reassign": "off",
+        "implicit-arrow-linebreak": "off",
+        "@typescript-eslint/comma-dangle": "off",
+        "react/react-in-jsx-scope": "off"
     }
 }
