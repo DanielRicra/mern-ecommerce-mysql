@@ -44,7 +44,7 @@ function SearchInput({ classes }: SearchInputProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    navigate(`/search?q=${query}&catId=${categoryId}`);
+    navigate(`/search?name=${query}&categoryId=${categoryId}`);
   };
 
   return (
