@@ -53,11 +53,11 @@ function ProductDetails() {
       <Modal
         opened={opened[0]}
         onClose={() => setOpened([false, false])}
-        title="Something bad happend"
+        title="Something bad happened"
         centered
       >
         <Notification icon={<IconCheck size={20} />} color="red" style={{ backgroundColor: 'transparent' }} disallowClose>
-          There is no enought products
+          There is no enough products
         </Notification>
       </Modal>
 
@@ -80,7 +80,7 @@ function ProductDetails() {
               variant="outline"
               radius="md"
             >
-              Something bad happend, refresh the page or try again later
+              Something bad happened, refresh the page or try again later
             </Alert>
           </Center>
         )}

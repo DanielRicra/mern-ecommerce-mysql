@@ -48,7 +48,7 @@ function Home() {
               variant="outline"
               radius="md"
             >
-              Something bad happend, refresh the page or try again later
+              Something bad happened, refresh the page or try again later
             </Alert>
           </Center>
         )}
